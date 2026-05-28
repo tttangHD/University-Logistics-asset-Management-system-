@@ -1,0 +1,20 @@
+﻿# IDE
+.idea/
+*.iml
+
+# Build output
+out/
+target/
+
+# SpecStory
+.specstory/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Cursor
+.cursorindexingignore

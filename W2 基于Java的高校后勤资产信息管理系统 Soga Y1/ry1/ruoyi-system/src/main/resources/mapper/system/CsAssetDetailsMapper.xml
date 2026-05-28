@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsAssetDetailsMapper">
+
+    <resultMap type="CsAssetDetails" id="CsAssetDetailsResult">
+        <result property="id"    column="id"    />
+        <result property="assetId"    column="asset_id"    />
+        <result property="assetName"    column="asset_name"    />
+        <result property="assetType"    column="asset_type"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="purchaseDate"    column="purchase_date"    />
+        <result property="warrantyExpiry"    column="warranty_expiry"    />
+        <result property="value"    column="value"    />
+        <result property="status"    column="status"    />
+        <result property="maintenanceRecords"    column="maintenance_records"    />
+    </resultMap>
+
+    <sql id="selectCsAssetDetailsVo">
+        select id, asset_id, asset_name, asset_type, serial_number, purchase_date, warranty_expiry, value, status, maintenance_records from cs_asset_details
+    </sql>
+
+    <select id="selectCsAssetDetailsList" parameterType="CsAssetDetails" resultMap="CsAssetDetailsResult">
+        <include refid="selectCsAssetDetailsVo"/>
+        <where>
+            <if test="assetId != null "> and asset_id = #{assetId}</if>
+            <if test="assetName != null  and assetName != ''"> and asset_name like concat('%', #{assetName}, '%')</if>
+            <if test="assetType != null  and assetType != ''"> and asset_type = #{assetType}</if>
+            <if test="serialNumber != null  and serialNumber != ''"> and serial_number = #{serialNumber}</if>
+            <if test="purchaseDate != null "> and purchase_date = #{purchaseDate}</if>
+            <if test="warrantyExpiry != null "> and warranty_expiry = #{warrantyExpiry}</if>
+            <if test="value != null "> and value = #{value}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="maintenanceRecords != null  and maintenanceRecords != ''"> and maintenance_records = #{maintenanceRecords}</if>
+        </where>
+    </select>
+
+    <select id="selectCsAssetDetailsById" parameterType="Long" resultMap="CsAssetDetailsResult">
+        <include refid="selectCsAssetDetailsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertCsAssetDetails" parameterType="CsAssetDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_asset_details
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">asset_id,</if>
+            <if test="assetName != null">asset_name,</if>
+            <if test="assetType != null">asset_type,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="purchaseDate != null">purchase_date,</if>
+            <if test="warrantyExpiry != null">warranty_expiry,</if>
+            <if test="value != null">value,</if>
+            <if test="status != null">status,</if>
+            <if test="maintenanceRecords != null">maintenance_records,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">#{assetId},</if>
+            <if test="assetName != null">#{assetName},</if>
+            <if test="assetType != null">#{assetType},</if>
+            <if test="serialNumber != null">#{serialNumber},</if>
+            <if test="purchaseDate != null">#{purchaseDate},</if>
+            <if test="warrantyExpiry != null">#{warrantyExpiry},</if>
+            <if test="value != null">#{value},</if>
+            <if test="status != null">#{status},</if>
+            <if test="maintenanceRecords != null">#{maintenanceRecords},</if>
+        </trim>
+    </insert>
+
+    <update id="updateCsAssetDetails" parameterType="CsAssetDetails">
+        update cs_asset_details
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assetId != null">asset_id = #{assetId},</if>
+            <if test="assetName != null">asset_name = #{assetName},</if>
+            <if test="assetType != null">asset_type = #{assetType},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="purchaseDate != null">purchase_date = #{purchaseDate},</if>
+            <if test="warrantyExpiry != null">warranty_expiry = #{warrantyExpiry},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="maintenanceRecords != null">maintenance_records = #{maintenanceRecords},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsAssetDetailsById" parameterType="Long">
+        delete from cs_asset_details where id = #{id}
+    </delete>
+
+    <delete id="deleteCsAssetDetailsByIds" parameterType="String">
+        delete from cs_asset_details where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsRepairRequests1Mapper">
+    
+    <resultMap type="CsRepairRequests1" id="CsRepairRequests1Result">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="equipmentName"    column="equipment_name"    />
+        <result property="problemDescription"    column="problem_description"    />
+        <result property="requestDate"    column="request_date"    />
+        <result property="status"    column="status"    />
+        <result property="assetId"    column="asset_id"    />
+    </resultMap>
+
+    <sql id="selectCsRepairRequests1Vo">
+        select id, user_id, equipment_name, problem_description, request_date, status, asset_id from cs_repair_requests1
+    </sql>
+
+    <select id="selectCsRepairRequests1List" parameterType="CsRepairRequests1" resultMap="CsRepairRequests1Result">
+        <include refid="selectCsRepairRequests1Vo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="equipmentName != null  and equipmentName != ''"> and equipment_name like concat('%', #{equipmentName}, '%')</if>
+            <if test="problemDescription != null  and problemDescription != ''"> and problem_description = #{problemDescription}</if>
+            <if test="requestDate != null "> and request_date = #{requestDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="assetId != null "> and asset_id = #{assetId}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsRepairRequests1ById" parameterType="Long" resultMap="CsRepairRequests1Result">
+        <include refid="selectCsRepairRequests1Vo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsRepairRequests1" parameterType="CsRepairRequests1" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_repair_requests1
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="equipmentName != null and equipmentName != ''">equipment_name,</if>
+            <if test="problemDescription != null and problemDescription != ''">problem_description,</if>
+            <if test="requestDate != null">request_date,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="assetId != null">asset_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="equipmentName != null and equipmentName != ''">#{equipmentName},</if>
+            <if test="problemDescription != null and problemDescription != ''">#{problemDescription},</if>
+            <if test="requestDate != null">#{requestDate},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="assetId != null">#{assetId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsRepairRequests1" parameterType="CsRepairRequests1">
+        update cs_repair_requests1
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="equipmentName != null and equipmentName != ''">equipment_name = #{equipmentName},</if>
+            <if test="problemDescription != null and problemDescription != ''">problem_description = #{problemDescription},</if>
+            <if test="requestDate != null">request_date = #{requestDate},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="assetId != null">asset_id = #{assetId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsRepairRequests1ById" parameterType="Long">
+        delete from cs_repair_requests1 where id = #{id}
+    </delete>
+
+    <delete id="deleteCsRepairRequests1ByIds" parameterType="String">
+        delete from cs_repair_requests1 where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

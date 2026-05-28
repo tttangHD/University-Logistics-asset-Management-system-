@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsPatientMapper">
+    
+    <resultMap type="CsPatient" id="CsPatientResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="age"    column="age"    />
+        <result property="gender"    column="gender"    />
+        <result property="address"    column="address"    />
+        <result property="contactNumber"    column="contact_number"    />
+        <result property="medicalHistory"    column="medical_history"    />
+        <result property="visitHistory"    column="visit_history"    />
+    </resultMap>
+
+    <sql id="selectCsPatientVo">
+        select id, name, age, gender, address, contact_number, medical_history, visit_history from cs_patient
+    </sql>
+
+    <select id="selectCsPatientList" parameterType="CsPatient" resultMap="CsPatientResult">
+        <include refid="selectCsPatientVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="contactNumber != null  and contactNumber != ''"> and contact_number = #{contactNumber}</if>
+            <if test="medicalHistory != null  and medicalHistory != ''"> and medical_history = #{medicalHistory}</if>
+            <if test="visitHistory != null  and visitHistory != ''"> and visit_history = #{visitHistory}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsPatientById" parameterType="Long" resultMap="CsPatientResult">
+        <include refid="selectCsPatientVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsPatient" parameterType="CsPatient" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_patient
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="age != null">age,</if>
+            <if test="gender != null">gender,</if>
+            <if test="address != null">address,</if>
+            <if test="contactNumber != null">contact_number,</if>
+            <if test="medicalHistory != null">medical_history,</if>
+            <if test="visitHistory != null">visit_history,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="age != null">#{age},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="address != null">#{address},</if>
+            <if test="contactNumber != null">#{contactNumber},</if>
+            <if test="medicalHistory != null">#{medicalHistory},</if>
+            <if test="visitHistory != null">#{visitHistory},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsPatient" parameterType="CsPatient">
+        update cs_patient
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="contactNumber != null">contact_number = #{contactNumber},</if>
+            <if test="medicalHistory != null">medical_history = #{medicalHistory},</if>
+            <if test="visitHistory != null">visit_history = #{visitHistory},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsPatientById" parameterType="Long">
+        delete from cs_patient where id = #{id}
+    </delete>
+
+    <delete id="deleteCsPatientByIds" parameterType="String">
+        delete from cs_patient where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

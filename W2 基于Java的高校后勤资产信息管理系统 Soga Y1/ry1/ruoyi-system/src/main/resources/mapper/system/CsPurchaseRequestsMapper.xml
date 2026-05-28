@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsPurchaseRequestsMapper">
+    
+    <resultMap type="CsPurchaseRequests" id="CsPurchaseRequestsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="itemName"    column="item_name"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="estimatedPrice"    column="estimated_price"    />
+        <result property="totalPrice"    column="total_price"    />
+        <result property="purposeDescription"    column="purpose_description"    />
+        <result property="requestDate"    column="request_date"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectCsPurchaseRequestsVo">
+        select id, user_id, item_name, quantity, estimated_price, total_price, purpose_description, request_date, status 
+        from cs_purchase_requests
+    </sql>
+
+    <select id="selectCsPurchaseRequestsList" parameterType="CsPurchaseRequests" resultMap="CsPurchaseRequestsResult">
+        <include refid="selectCsPurchaseRequestsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="itemName != null  and itemName != ''"> and item_name like concat('%', #{itemName}, '%')</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="estimatedPrice != null "> and estimated_price = #{estimatedPrice}</if>
+            <if test="totalPrice != null "> and total_price = #{totalPrice}</if>
+            <if test="purposeDescription != null  and purposeDescription != ''"> and purpose_description = #{purposeDescription}</if>
+            <if test="requestDate != null "> and request_date = #{requestDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsPurchaseRequestsById" parameterType="Long" resultMap="CsPurchaseRequestsResult">
+        <include refid="selectCsPurchaseRequestsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsPurchaseRequests" parameterType="CsPurchaseRequests" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_purchase_requests
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="itemName != null">item_name,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="estimatedPrice != null">estimated_price,</if>
+            <if test="totalPrice != null">total_price,</if>
+            <if test="purposeDescription != null">purpose_description,</if>
+            <if test="requestDate != null">request_date,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="itemName != null">#{itemName},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="estimatedPrice != null">#{estimatedPrice},</if>
+            <if test="totalPrice != null">#{totalPrice},</if>
+            <if test="purposeDescription != null">#{purposeDescription},</if>
+            <if test="requestDate != null">#{requestDate},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsPurchaseRequests" parameterType="CsPurchaseRequests">
+        update cs_purchase_requests
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="itemName != null">item_name = #{itemName},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="estimatedPrice != null">estimated_price = #{estimatedPrice},</if>
+            <if test="totalPrice != null">total_price = #{totalPrice},</if>
+            <if test="purposeDescription != null">purpose_description = #{purposeDescription},</if>
+            <if test="requestDate != null">request_date = #{requestDate},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsPurchaseRequestsById" parameterType="Long">
+        delete from cs_purchase_requests where id = #{id}
+    </delete>
+
+    <delete id="deleteCsPurchaseRequestsByIds" parameterType="String">
+        delete from cs_purchase_requests where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper> 

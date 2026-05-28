@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsScheduleMapper">
+    
+    <resultMap type="CsSchedule" id="CsScheduleResult">
+        <result property="id"    column="id"    />
+        <result property="doctorId"    column="doctor_id"    />
+        <result property="departmentId"    column="department_id"    />
+        <result property="date"    column="date"    />
+        <result property="timeSlot"    column="time_slot"    />
+    </resultMap>
+
+    <sql id="selectCsScheduleVo">
+        select id, doctor_id, department_id, date, time_slot from cs_schedule
+    </sql>
+
+    <select id="selectCsScheduleList" parameterType="CsSchedule" resultMap="CsScheduleResult">
+        <include refid="selectCsScheduleVo"/>
+        <where>  
+            <if test="doctorId != null "> and doctor_id = #{doctorId}</if>
+            <if test="departmentId != null "> and department_id = #{departmentId}</if>
+            <if test="date != null "> and date = #{date}</if>
+            <if test="timeSlot != null  and timeSlot != ''"> and time_slot = #{timeSlot}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsScheduleById" parameterType="Long" resultMap="CsScheduleResult">
+        <include refid="selectCsScheduleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsSchedule" parameterType="CsSchedule" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_schedule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="doctorId != null">doctor_id,</if>
+            <if test="departmentId != null">department_id,</if>
+            <if test="date != null">date,</if>
+            <if test="timeSlot != null">time_slot,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="doctorId != null">#{doctorId},</if>
+            <if test="departmentId != null">#{departmentId},</if>
+            <if test="date != null">#{date},</if>
+            <if test="timeSlot != null">#{timeSlot},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsSchedule" parameterType="CsSchedule">
+        update cs_schedule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="doctorId != null">doctor_id = #{doctorId},</if>
+            <if test="departmentId != null">department_id = #{departmentId},</if>
+            <if test="date != null">date = #{date},</if>
+            <if test="timeSlot != null">time_slot = #{timeSlot},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsScheduleById" parameterType="Long">
+        delete from cs_schedule where id = #{id}
+    </delete>
+
+    <delete id="deleteCsScheduleByIds" parameterType="String">
+        delete from cs_schedule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

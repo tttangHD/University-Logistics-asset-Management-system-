@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsUsersMapper">
+    
+    <resultMap type="CsUsers" id="CsUsersResult">
+        <result property="id"    column="id"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="email"    column="email"    />
+        <result property="role"    column="role"    />
+    </resultMap>
+
+    <sql id="selectCsUsersVo">
+        select id, username, password, email, role from cs_users
+    </sql>
+
+    <select id="selectCsUsersList" parameterType="CsUsers" resultMap="CsUsersResult">
+        <include refid="selectCsUsersVo"/>
+        <where>  
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="role != null  and role != ''"> and role = #{role}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsUsersById" parameterType="Long" resultMap="CsUsersResult">
+        <include refid="selectCsUsersVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsUsers" parameterType="CsUsers" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_users
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="email != null">email,</if>
+            <if test="role != null and role != ''">role,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="email != null">#{email},</if>
+            <if test="role != null and role != ''">#{role},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsUsers" parameterType="CsUsers">
+        update cs_users
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="role != null and role != ''">role = #{role},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsUsersById" parameterType="Long">
+        delete from cs_users where id = #{id}
+    </delete>
+
+    <delete id="deleteCsUsersByIds" parameterType="String">
+        delete from cs_users where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

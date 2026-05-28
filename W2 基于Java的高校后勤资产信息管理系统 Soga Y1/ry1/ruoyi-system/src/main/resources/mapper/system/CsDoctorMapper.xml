@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsDoctorMapper">
+    
+    <resultMap type="CsDoctor" id="CsDoctorResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="specialization"    column="specialization"    />
+        <result property="contactNumber"    column="contact_number"    />
+    </resultMap>
+
+    <sql id="selectCsDoctorVo">
+        select id, name, specialization, contact_number from cs_doctor
+    </sql>
+
+    <select id="selectCsDoctorList" parameterType="CsDoctor" resultMap="CsDoctorResult">
+        <include refid="selectCsDoctorVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="specialization != null  and specialization != ''"> and specialization = #{specialization}</if>
+            <if test="contactNumber != null  and contactNumber != ''"> and contact_number = #{contactNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsDoctorById" parameterType="Long" resultMap="CsDoctorResult">
+        <include refid="selectCsDoctorVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsDoctor" parameterType="CsDoctor" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_doctor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="specialization != null">specialization,</if>
+            <if test="contactNumber != null">contact_number,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="specialization != null">#{specialization},</if>
+            <if test="contactNumber != null">#{contactNumber},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsDoctor" parameterType="CsDoctor">
+        update cs_doctor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="specialization != null">specialization = #{specialization},</if>
+            <if test="contactNumber != null">contact_number = #{contactNumber},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsDoctorById" parameterType="Long">
+        delete from cs_doctor where id = #{id}
+    </delete>
+
+    <delete id="deleteCsDoctorByIds" parameterType="String">
+        delete from cs_doctor where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsPrescriptionMapper">
+    
+    <resultMap type="CsPrescription" id="CsPrescriptionResult">
+        <result property="id"    column="id"    />
+        <result property="patientId"    column="patient_id"    />
+        <result property="doctorId"    column="doctor_id"    />
+        <result property="medication"    column="medication"    />
+        <result property="dosage"    column="dosage"    />
+    </resultMap>
+
+    <sql id="selectCsPrescriptionVo">
+        select id, patient_id, doctor_id, medication, dosage from cs_prescription
+    </sql>
+
+    <select id="selectCsPrescriptionList" parameterType="CsPrescription" resultMap="CsPrescriptionResult">
+        <include refid="selectCsPrescriptionVo"/>
+        <where>  
+            <if test="patientId != null "> and patient_id = #{patientId}</if>
+            <if test="doctorId != null "> and doctor_id = #{doctorId}</if>
+            <if test="medication != null  and medication != ''"> and medication = #{medication}</if>
+            <if test="dosage != null  and dosage != ''"> and dosage = #{dosage}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsPrescriptionById" parameterType="Long" resultMap="CsPrescriptionResult">
+        <include refid="selectCsPrescriptionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsPrescription" parameterType="CsPrescription" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_prescription
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">patient_id,</if>
+            <if test="doctorId != null">doctor_id,</if>
+            <if test="medication != null">medication,</if>
+            <if test="dosage != null">dosage,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="patientId != null">#{patientId},</if>
+            <if test="doctorId != null">#{doctorId},</if>
+            <if test="medication != null">#{medication},</if>
+            <if test="dosage != null">#{dosage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsPrescription" parameterType="CsPrescription">
+        update cs_prescription
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="patientId != null">patient_id = #{patientId},</if>
+            <if test="doctorId != null">doctor_id = #{doctorId},</if>
+            <if test="medication != null">medication = #{medication},</if>
+            <if test="dosage != null">dosage = #{dosage},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsPrescriptionById" parameterType="Long">
+        delete from cs_prescription where id = #{id}
+    </delete>
+
+    <delete id="deleteCsPrescriptionByIds" parameterType="String">
+        delete from cs_prescription where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

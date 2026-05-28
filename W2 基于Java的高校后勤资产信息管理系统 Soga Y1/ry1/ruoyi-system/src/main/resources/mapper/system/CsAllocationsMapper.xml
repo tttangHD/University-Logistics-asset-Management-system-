@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.CsAllocationsMapper">
+    
+    <resultMap type="CsAllocations" id="CsAllocationsResult">
+        <result property="id"    column="id"    />
+        <result property="assetId"    column="asset_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="allocationDate"    column="allocation_date"    />
+    </resultMap>
+
+    <sql id="selectCsAllocationsVo">
+        select id, asset_id, user_id, allocation_date from cs_allocations
+    </sql>
+
+    <select id="selectCsAllocationsList" parameterType="CsAllocations" resultMap="CsAllocationsResult">
+        <include refid="selectCsAllocationsVo"/>
+        <where>  
+            <if test="assetId != null "> and asset_id = #{assetId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="allocationDate != null "> and allocation_date = #{allocationDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectCsAllocationsById" parameterType="Long" resultMap="CsAllocationsResult">
+        <include refid="selectCsAllocationsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCsAllocations" parameterType="CsAllocations" useGeneratedKeys="true" keyProperty="id">
+        insert into cs_allocations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">asset_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="allocationDate != null">allocation_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assetId != null">#{assetId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="allocationDate != null">#{allocationDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCsAllocations" parameterType="CsAllocations">
+        update cs_allocations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assetId != null">asset_id = #{assetId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="allocationDate != null">allocation_date = #{allocationDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCsAllocationsById" parameterType="Long">
+        delete from cs_allocations where id = #{id}
+    </delete>
+
+    <delete id="deleteCsAllocationsByIds" parameterType="String">
+        delete from cs_allocations where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
